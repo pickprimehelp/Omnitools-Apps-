@@ -11,8 +11,8 @@ android {
         applicationId = "com.aistudio.omnitools.xkrvp"
         minSdk = 24
         targetSdk = 36
-        versionCode = 7
-        versionName = "2.5"
+        versionCode = 8
+        versionName = "2.6"
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -33,70 +33,7 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-}
-
-tasks.matching { it.name.endsWith("JavaWithJavac") }.configureEach {
-    enabled = false
-}
-
-fun getOrAssemblePrebuilt(dir: File, fileName: String): File? {
-    val cacheFile = file("build/prebuilt_cache/$fileName")
-    if (cacheFile.exists()) return cacheFile
-    val direct = File(dir, fileName)
-    if (direct.exists()) return direct
-    val parts = dir.listFiles { _, name -> name.startsWith("$fileName.part") }?.sortedBy { it.name }
-    if (!parts.isNullOrEmpty()) {
-        cacheFile.parentFile.mkdirs()
-        cacheFile.outputStream().use { out ->
-            for (part in parts) {
-                part.inputStream().use { it.copyTo(out) }
-            }
-        }
-        return cacheFile
-    }
-    return null
-}
-
-tasks.matching { it.name in listOf("assembleDebug", "assembleRelease", "packageDebug", "packageRelease") }.configureEach {
-    doLast {
-        val debugApk = file("build/outputs/apk/debug/app-debug.apk")
-        val releaseApk = file("build/outputs/apk/release/app-release.apk")
-        val prebuilt = getOrAssemblePrebuilt(file("prebuilt"), "app-debug.apk")
-            ?: getOrAssemblePrebuilt(rootProject.file("app/prebuilt"), "app-debug.apk")
-            ?: rootProject.file(".build-outputs/app-debug.apk").takeIf { it.exists() }
-        if (prebuilt != null) {
-            debugApk.parentFile.mkdirs()
-            prebuilt.copyTo(debugApk, overwrite = true)
-            releaseApk.parentFile.mkdirs()
-            prebuilt.copyTo(releaseApk, overwrite = true)
-            val rootOutputs = rootProject.file(".build-outputs")
-            if (rootOutputs.exists() || rootOutputs.mkdirs()) {
-                prebuilt.copyTo(File(rootOutputs, "app-debug.apk"), overwrite = true)
-                prebuilt.copyTo(File(rootOutputs, "app-release.apk"), overwrite = true)
-            }
-        }
-    }
-}
-
-tasks.matching { it.name in listOf("bundleDebug", "bundleRelease", "packageDebugBundle", "packageReleaseBundle") }.configureEach {
-    doLast {
-        val debugAab = file("build/outputs/bundle/debug/app-debug.aab")
-        val releaseAab = file("build/outputs/bundle/release/app-release.aab")
-        val prebuiltAab = getOrAssemblePrebuilt(file("prebuilt"), "app-release.aab")
-            ?: getOrAssemblePrebuilt(rootProject.file("app/prebuilt"), "app-release.aab")
-            ?: rootProject.file(".build-outputs/app-release.aab").takeIf { it.exists() }
-        if (prebuiltAab != null) {
-            debugAab.parentFile.mkdirs()
-            prebuiltAab.copyTo(debugAab, overwrite = true)
-            releaseAab.parentFile.mkdirs()
-            prebuiltAab.copyTo(releaseAab, overwrite = true)
-            val rootOutputs = rootProject.file(".build-outputs")
-            if (rootOutputs.exists() || rootOutputs.mkdirs()) {
-                prebuiltAab.copyTo(File(rootOutputs, "app-release.aab"), overwrite = true)
-                prebuiltAab.copyTo(File(rootOutputs, "app-debug.aab"), overwrite = true)
-            }
-        }
+        buildConfig = true
     }
 }
 
@@ -111,6 +48,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.play.services.ads)
+    implementation(libs.zxing.core)
 
     debugImplementation(libs.androidx.ui.tooling)
 }

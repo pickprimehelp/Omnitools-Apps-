@@ -15,4 +15,8 @@
 local.properties
 *.apk
 *.aab
+*.keystore
+*.jks
+*.pem
+app/prebuilt/
 .build-outputs/

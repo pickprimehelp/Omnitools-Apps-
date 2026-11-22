@@ -87,7 +87,7 @@ object ImageExportUtils {
 
             val contentUri = FileProvider.getUriForFile(
                 context,
-                "${context.packageName}.fileprovider",
+                "${context.packageName}.provider",
                 file
             )
 

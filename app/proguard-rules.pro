@@ -8,6 +8,15 @@
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
 
+# Keep AdMob / Google Mobile Ads classes
+-keep class com.google.android.gms.ads.** { *; }
+-keep public class com.example.ads.** { *; }
+-dontwarn com.google.android.gms.ads.**
+
+# Keep ZXing QR/Barcode classes
+-keep class com.google.zxing.** { *; }
+-dontwarn com.google.zxing.**
+
 # Reflection-sensitive Compose bridge class
 -keep class androidx.compose.ui.platform.AndroidCompositionLocals_androidKt {
     public static androidx.compose.runtime.ProvidableCompositionLocal getLocalLifecycleOwner();

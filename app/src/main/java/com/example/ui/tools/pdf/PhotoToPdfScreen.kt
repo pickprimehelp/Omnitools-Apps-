@@ -599,7 +599,7 @@ fun PhotoToPdfScreen(onBack: () -> Unit) {
                                         try {
                                             val uri = FileProvider.getUriForFile(
                                                 context,
-                                                "${context.packageName}.fileprovider",
+                                                "${context.packageName}.provider",
                                                 pdfFile
                                             )
                                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
@@ -627,7 +627,7 @@ fun PhotoToPdfScreen(onBack: () -> Unit) {
                                         try {
                                             val uri = FileProvider.getUriForFile(
                                                 context,
-                                                "${context.packageName}.fileprovider",
+                                                "${context.packageName}.provider",
                                                 pdfFile
                                             )
                                             val viewIntent = Intent(Intent.ACTION_VIEW).apply {
